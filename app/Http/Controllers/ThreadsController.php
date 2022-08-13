@@ -9,7 +9,9 @@ class ThreadsController extends Controller
 {
     public function index()
     {
-
+        return view('threads.index', [
+            'threads' => Thread::latest()->get(),
+        ]);
     }
 
     public function create()
@@ -22,6 +24,9 @@ class ThreadsController extends Controller
 
     public function show(Thread $thread)
     {
+        return view('threads.show', [
+            'thread' => $thread,
+        ]);
     }
 
     public function edit(Thread $thread)
