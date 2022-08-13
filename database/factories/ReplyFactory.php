@@ -15,7 +15,7 @@ class ReplyFactory extends Factory
         return [
             'thread_id' => ThreadFactory::new(),
             'user_id' => UserFactory::new(),
-            'body' => $this->faker->paragraph(),
+            'body' => $this->faker->sentence(),
         ];
     }
 }
