@@ -17,6 +17,13 @@ class Thread extends Model
         'user_id',
     ];
 
+    protected static function booted(): void
+    {
+        static::addGlobalScope('replies_count', function (Builder $builder) {
+            $builder->withCount('replies');
+        });
+    }
+
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

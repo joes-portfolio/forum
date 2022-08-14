@@ -11,11 +11,18 @@
         <div class="p-6 bg-white border-b border-gray-200">
           @foreach($threads as $thread)
             <article>
-              <h4>
-                <a href="{{ $thread->path() }}">
-                  {{ $thread->title }}
-                </a>
-              </h4>
+              <div class="flex items-center space-x-2">
+                <h4>
+                  <a href="{{ $thread->path() }}">
+                    {{ $thread->title }}
+                  </a>
+                </h4>
+                <span>&middot;</span>
+                <strong>
+                  <a href="{{ $thread->path() }}">
+                    {{ $thread->replies_count }} {{ str('reply')->plural($thread->replies_count) }}</a>
+                </strong>
+              </div>
               <div>{{ $thread->body }}</div>
             </article>
             <br />

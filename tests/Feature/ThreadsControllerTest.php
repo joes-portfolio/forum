@@ -125,3 +125,21 @@ test('a user can filter threads by a username', function () {
         ->assertSee($threadByJohn->title)
         ->assertDontSee($threadNotByJohn->title);
 });
+
+test('a user can filter threads by popularity', function () {
+    $threadWithTwoReplies = create(ThreadFactory::new());
+    create(ReplyFactory::new(['thread_id' => $threadWithTwoReplies->id])->count(2));
+
+    $threadWithThreeReplies = create(ThreadFactory::new());
+    create(ReplyFactory::new(['thread_id' => $threadWithThreeReplies->id])->count(3));
+
+    $threadWithZeroReplies = $this->thread;
+
+    get('/threads?popular=1')
+        ->assertOk()
+        ->assertSeeInOrder([
+            $threadWithThreeReplies->title,
+            $threadWithTwoReplies->title,
+            $threadWithZeroReplies->title,
+        ]);
+});
