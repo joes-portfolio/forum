@@ -3,17 +3,28 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Thread extends Model
 {
+    public function replies(): HasMany
+    {
+        return $this->hasMany(Reply::class);
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function path(): string
     {
         return "/threads/{$this->id}";
     }
 
-    public function replies(): HasMany
+    public function addReply(array $reply): void
     {
-        return $this->hasMany(Reply::class);
+        $this->replies()->create($reply);
     }
 }

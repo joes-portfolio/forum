@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RepliesController;
 use App\Http\Controllers\ThreadsController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,5 +23,6 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/threads', [ThreadsController::class, 'index']);
 Route::get('/threads/{thread}', [ThreadsController::class, 'show']);
+Route::post('/threads/{thread}/replies', [RepliesController::class, 'store'])->middleware('auth');
 
 require __DIR__.'/auth.php';

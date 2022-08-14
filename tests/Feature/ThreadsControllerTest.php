@@ -16,7 +16,7 @@ test('a user can view all threads', function () {
 });
 
 test('a user can read a thread', function () {
-    get("/threads/{$this->thread->id}")
+    get($this->thread->path())
         ->assertOk()
         ->assertSee($this->thread->title);
 });
@@ -24,7 +24,7 @@ test('a user can read a thread', function () {
 test('a user can read replies of a thread', function () {
     $reply = ReplyFactory::new(['thread_id' => $this->thread->id])->create();
 
-    get("/threads/{$this->thread->id}")
+    get($this->thread->path())
         ->assertOk()
         ->assertSee($reply->body);
 });
