@@ -21,9 +21,7 @@ Route::middleware(['auth'])->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 });
 
-Route::get('/threads', [ThreadsController::class, 'index']);
-Route::post('/threads', [ThreadsController::class, 'store'])->middleware('auth');
-Route::get('/threads/{thread}', [ThreadsController::class, 'show']);
+Route::resource('threads', ThreadsController::class);
 Route::post('/threads/{thread}/replies', [RepliesController::class, 'store'])->middleware('auth');
 
 require __DIR__.'/auth.php';

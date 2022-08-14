@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class ThreadsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only(['create', 'store']);
+    }
+
     public function index()
     {
         return view('threads.index', [
@@ -16,6 +21,7 @@ class ThreadsController extends Controller
 
     public function create()
     {
+        return view('threads.create');
     }
 
     public function store(Request $request)

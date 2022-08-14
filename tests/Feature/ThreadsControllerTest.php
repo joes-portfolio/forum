@@ -73,3 +73,12 @@ test('unauthenticated user cannot create a thread', function () {
         'body' => $thread->body,
     ]);
 });
+
+test('unauthenticated user cannot see thread creation page', function () {
+    withoutExceptionHandling();
+
+    $this->expectException(AuthenticationException::class);
+
+    get('/threads/create')
+        ->assertRedirect('/login');
+});
