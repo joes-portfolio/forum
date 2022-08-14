@@ -103,3 +103,14 @@ test('a thread requires a valid channel', function () {
     post('/threads', $thread->toArray())
         ->assertSessionHasErrors('channel_id');
 });
+
+test('a user can filter threads by channel', function () {
+    $channel = create(ChannelFactory::new());
+    $threadInChannel = create(ThreadFactory::new(['channel_id' => $channel->id]));
+    $threadNotInChannel = create(ThreadFactory::new());
+
+    get("/threads/{$channel->slug}")
+        ->assertOk()
+        ->assertSee($threadInChannel->name)
+        ->assertDontSee($threadNotInChannel->name);
+});

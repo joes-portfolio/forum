@@ -22,9 +22,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Route::resource('threads', ThreadsController::class);
-Route::get('/threads', [ThreadsController::class, 'index']);
 Route::post('/threads', [ThreadsController::class, 'store'])->middleware('auth');
 Route::get('/threads/create', [ThreadsController::class, 'create'])->middleware('auth');
+Route::get('/threads/{channel:slug?}', [ThreadsController::class, 'index']);
 Route::get('/threads/{channel}/{thread}', [ThreadsController::class, 'show']);
 Route::post('/threads/{channel}/{thread}/replies', [RepliesController::class, 'store'])->middleware('auth');
 

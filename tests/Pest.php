@@ -66,7 +66,7 @@ function make(Factory $factory)
 /**
  * Return a raw model attributes for a factory
  *
- * @return \Illuminate\Database\Eloquent\Model
+ * @return array
  */
 function raw(Factory $factory)
 {
