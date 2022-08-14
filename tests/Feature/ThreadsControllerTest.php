@@ -114,3 +114,14 @@ test('a user can filter threads by channel', function () {
         ->assertSee($threadInChannel->name)
         ->assertDontSee($threadNotInChannel->name);
 });
+
+test('a user can filter threads by a username', function () {
+    signIn(create(UserFactory::new(['name' => 'johnWick'])));
+
+    $threadByJohn = create(ThreadFactory::new(['user_id' => auth()->id()]));
+    $threadNotByJohn = create(ThreadFactory::new());
+
+    get('/threads?by=johnWick')
+        ->assertSee($threadByJohn->title)
+        ->assertDontSee($threadNotByJohn->title);
+});
