@@ -1,10 +1,10 @@
 <?php
 
 use App\Models\Thread;
+use Database\Factories\ChannelFactory;
 use Database\Factories\ReplyFactory;
 use Database\Factories\ThreadFactory;
 use Database\Factories\UserFactory;
-
 use Illuminate\Auth\AuthenticationException;
 
 use function Pest\Laravel\assertDatabaseHas;
@@ -16,7 +16,6 @@ use function Pest\Laravel\withoutExceptionHandling;
 beforeEach(function () {
     $this->thread = create(ThreadFactory::new());
 });
-
 
 test('a user can view all threads', function () {
     get('/threads')
@@ -39,13 +38,11 @@ test('a user can read replies of a thread', function () {
 });
 
 test('authenticated user can create a thread', function () {
-    withoutExceptionHandling();
-
-    signIn(create(UserFactory::new(['email' => 'l@l.l'])));
+    signIn(create(UserFactory::new()));
 
     $thread = make(ThreadFactory::new());
 
-    post('/threads', $thread->toArray())
+    $response = post('/threads', $thread->toArray())
         ->assertRedirect();
 
     assertDatabaseHas((new Thread)->getTable(), [
@@ -53,15 +50,14 @@ test('authenticated user can create a thread', function () {
         'body' => $thread->body,
     ]);
 
-    get($thread->path())
+    get($response->headers->get('Location'))
         ->assertSee($thread->title)
         ->assertSee($thread->body);
 });
 
 test('unauthenticated user cannot create a thread', function () {
-    withoutExceptionHandling();
-
-    $this->expectException(AuthenticationException::class);
+    get('/threads/create')
+        ->assertRedirect('/login');
 
     $thread = raw(ThreadFactory::new());
 
@@ -69,16 +65,41 @@ test('unauthenticated user cannot create a thread', function () {
         ->assertRedirect('/login');
 
     assertDatabaseMissing((new Thread)->getTable(), [
-        'title' => $thread->title,
-        'body' => $thread->body,
+        'title' => $thread['title'],
+        'body' => $thread['body'],
     ]);
 });
 
-test('unauthenticated user cannot see thread creation page', function () {
-    withoutExceptionHandling();
+test('a thread requires a title', function () {
+    signIn();
 
-    $this->expectException(AuthenticationException::class);
+    $thread = make(ThreadFactory::new(['title' => null]));
 
-    get('/threads/create')
-        ->assertRedirect('/login');
+    post('/threads', $thread->toArray())
+        ->assertSessionHasErrors('title');
+});
+
+test('a thread requires a body', function () {
+    signIn();
+
+    $thread = make(ThreadFactory::new(['body' => null]));
+
+    post('/threads', $thread->toArray())
+        ->assertSessionHasErrors('body');
+});
+
+test('a thread requires a valid channel', function () {
+    ChannelFactory::new()->count(2)->create();
+
+    signIn();
+
+    $thread = make(ThreadFactory::new(['channel_id' => null]));
+
+    post('/threads', $thread->toArray())
+        ->assertSessionHasErrors('channel_id');
+
+    $thread = make(ThreadFactory::new(['channel_id' => 999]));
+
+    post('/threads', $thread->toArray())
+        ->assertSessionHasErrors('channel_id');
 });

@@ -9,8 +9,12 @@ use Illuminate\Http\Request;
 
 class RepliesController extends Controller
 {
-    public function store(Request $request, Thread $thread): RedirectResponse
+    public function store(Request $request, $channelId, Thread $thread): RedirectResponse
     {
+        $request->validate([
+            'body' => ['required']
+        ]);
+
         $thread->addReply([
             'body' => $request->get('body'),
             'user_id' => auth()->id()

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Channel;
 use App\Models\Reply;
 use App\Models\User;
 use Database\Factories\ReplyFactory;
@@ -8,6 +9,16 @@ use Illuminate\Support\Collection;
 
 beforeEach(function () {
     $this->thread = ThreadFactory::new()->create();
+});
+
+it('can return its url string path', function () {
+    expect($this->thread->path())
+        ->toEqual("/threads/{$this->thread->channel->slug}/{$this->thread->id}");
+});
+
+it('has a creator', function () {
+    expect($this->thread->creator)
+        ->toBeInstanceOf(User::class);
 });
 
 it('has replies', function () {
@@ -21,11 +32,6 @@ it('has replies', function () {
         ->and($this->thread->replies[1])->toBeInstanceOf(Reply::class);
 });
 
-it('has a creator', function () {
-    expect($this->thread->creator)
-        ->toBeInstanceOf(User::class);
-});
-
 it('can add a reply', function () {
     $this->thread->addReply([
         'body' => 'foo bar',
@@ -34,4 +40,12 @@ it('can add a reply', function () {
 
     expect($this->thread->replies)
         ->toHaveCount(1);
+});
+
+it('belongs to a channel', function () {
+    /* @var \App\Models\Thread $thread */
+    $thread = create(ThreadFactory::new());
+
+    expect($thread->channel)
+        ->toBeInstanceOf(Channel::class);
 });

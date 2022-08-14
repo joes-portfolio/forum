@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Thread;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 
 class ThreadFactory extends Factory
 {
@@ -14,6 +13,7 @@ class ThreadFactory extends Factory
     {
         return [
             'user_id' => UserFactory::new(),
+            'channel_id' => ChannelFactory::new(),
             'title' => $this->faker->sentence(),
             'body' => $this->faker->paragraph(),
         ];
