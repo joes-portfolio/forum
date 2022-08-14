@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Thread extends Model
 {
+    protected $fillable = [
+        'body',
+        'title',
+        'user_id',
+    ];
+
     public function replies(): HasMany
     {
         return $this->hasMany(Reply::class);

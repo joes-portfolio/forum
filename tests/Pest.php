@@ -11,6 +11,10 @@
 |
 */
 
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Tests\TestCase;
+
 uses(Tests\TestCase::class)->in('Feature', 'Unit');
 
 /*
@@ -39,7 +43,44 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * Persist and return a model instance for a factory
+ *
+ * @return \Illuminate\Database\Eloquent\Model
+ */
+function create(Factory $factory)
 {
-    // ..
+    return $factory->create();
+}
+
+/**
+ * Return a model instance for a factory
+ *
+ * @return \Illuminate\Database\Eloquent\Model
+ */
+function make(Factory $factory)
+{
+    return $factory->make();
+}
+
+/**
+ * Return a raw model attributes for a factory
+ *
+ * @return \Illuminate\Database\Eloquent\Model
+ */
+function raw(Factory $factory)
+{
+    return $factory->raw();
+}
+
+/**
+ * Set the currently logged-in user for the application.
+ *
+ * @return TestCase
+ */
+function signIn(Authenticatable $user = null)
+{
+    $user ??= create(\Database\Factories\UserFactory::new());
+
+    return test()->actingAs($user);
 }
