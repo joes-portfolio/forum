@@ -80,7 +80,7 @@
             </x-slot>
 
             <x-slot name="content">
-              @foreach(\App\Models\Channel::all() as $channel)
+              @foreach($channels as $channel)
                 <x-dropdown-link href="/threads/{{ $channel->slug }}">
                   {{ $channel->name }}
                 </x-dropdown-link>

@@ -17,6 +17,11 @@ class Thread extends Model
         'user_id',
     ];
 
+    protected $with = [
+        'channel',
+        'creator',
+    ];
+
     protected static function booted(): void
     {
         static::addGlobalScope('replies_count', function (Builder $builder) {
@@ -36,7 +41,9 @@ class Thread extends Model
 
     public function replies(): HasMany
     {
-        return $this->hasMany(Reply::class);
+        return $this->hasMany(Reply::class)
+            ->with('owner')
+            ->withCount('favorites');
     }
 
     public function scopeFilter(Builder $query, ThreadFilters $filters)

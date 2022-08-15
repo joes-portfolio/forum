@@ -12,6 +12,7 @@ class ThreadsController extends Controller
     public function index(ThreadFilters $filters, Channel $channel = null)
     {
         $threads = Thread::query()
+            ->with('channel')
             ->latest()
             ->filter($filters);
 
@@ -52,7 +53,7 @@ class ThreadsController extends Controller
     public function show($channelId, Thread $thread)
     {
         return view('threads.show', [
-            'thread' => $thread->load('creator'),
+            'thread' => $thread,
             'replies' => $thread->replies()->paginate(),
         ]);
     }

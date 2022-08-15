@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Channel;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +12,14 @@ class AppServiceProvider extends ServiceProvider
     {
         \Illuminate\Support\Facades\View::composer(
             ['threads.create', 'layouts.navigation'],
-            fn ($view) => $view->with('channels', Channel::all())
+            function ($view) {
+                $channels = Cache::rememberForever(
+                    'channels',
+                    fn () => Channel::all(),
+                );
+
+                return $view->with('channels', $channels);
+            }
         );
     }
 
