@@ -28,6 +28,7 @@ Route::post('/threads', [ThreadsController::class, 'store'])->middleware('auth')
 Route::get('/threads/create', [ThreadsController::class, 'create'])->middleware('auth');
 Route::get('/threads/{channel:slug?}', [ThreadsController::class, 'index']);
 Route::get('/threads/{channel}/{thread}', [ThreadsController::class, 'show']);
+Route::delete('/threads/{channel}/{thread}', [ThreadsController::class, 'destroy'])->middleware('auth');
 Route::post('/threads/{channel}/{thread}/replies', [RepliesController::class, 'store'])->middleware('auth');
 Route::post('/replies/{reply}/favorites', [FavoritesController::class, 'store'])->middleware('auth');
 

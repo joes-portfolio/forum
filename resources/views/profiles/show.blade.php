@@ -11,7 +11,7 @@
 
   <div class="py-12">
     <div class="flex space-x-10 max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <div class="w-2/3 space-y-3">
+      <div class="w-2/3 mx-auto space-y-3">
         @foreach($threads as $thread)
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 bg-white border-b border-gray-200">
@@ -29,15 +29,7 @@
           </div>
         @endforeach
 
-          {{ $threads->links() }}
-      </div>
-
-      <div class="w-1/3">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-          <div class="p-6 bg-white border-b border-gray-200">
-            right
-          </div>
-        </div>
+        {{ $threads->links() }}
       </div>
     </div>
   </div>

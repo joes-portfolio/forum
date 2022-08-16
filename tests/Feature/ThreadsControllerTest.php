@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Reply;
 use App\Models\Thread;
 use Database\Factories\ChannelFactory;
 use Database\Factories\ReplyFactory;
@@ -9,6 +10,7 @@ use Illuminate\Auth\AuthenticationException;
 
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
+use function Pest\Laravel\delete;
 use function Pest\Laravel\get;
 use function Pest\Laravel\post;
 use function Pest\Laravel\withoutExceptionHandling;
@@ -142,4 +144,33 @@ test('a user can filter threads by popularity', function () {
             $threadWithTwoReplies->title,
             $threadWithZeroReplies->title,
         ]);
+});
+
+test('unauthorized users cannot delete threads', function () {
+    $thread = create(ThreadFactory::new());
+
+    delete($thread->path())
+        ->assertRedirect('/login');
+
+    assertDatabaseHas((new Thread)->getTable(), ['id' => $thread->id]);
+
+    signIn();
+
+    delete($thread->path())
+        ->assertForbidden();
+
+    assertDatabaseHas((new Thread)->getTable(), ['id' => $thread->id]);
+});
+
+test('authorized users can delete threads', function () {
+    signIn();
+
+    $thread = create(ThreadFactory::new(['user_id' => auth()->id()]));
+    $reply = create(ReplyFactory::new(['thread_id' => $thread->id]));
+
+    delete($thread->path())
+        ->assertRedirect('/threads');
+
+    assertDatabaseMissing((new Thread)->getTable(), ['id' => $thread->id]);
+    assertDatabaseMissing((new Reply)->getTable(), ['id' => $reply->id]);
 });

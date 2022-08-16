@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Filters\ThreadFilters;
 use App\Models\Channel;
 use App\Models\Thread;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
-class ThreadsController extends Controller
+class ThreadsController
 {
+    use AuthorizesRequests;
+
     public function index(ThreadFilters $filters, Channel $channel = null)
     {
         $threads = Thread::query()
@@ -50,7 +53,7 @@ class ThreadsController extends Controller
         return redirect()->to($thread->path());
     }
 
-    public function show($channelId, Thread $thread)
+    public function show($channel, Thread $thread)
     {
         return view('threads.show', [
             'thread' => $thread,
@@ -66,7 +69,13 @@ class ThreadsController extends Controller
     {
     }
 
-    public function destroy(Thread $thread)
+    public function destroy($channel, Thread $thread)
     {
+        $this->authorize('update', $thread);
+
+        $thread->replies()->delete();
+        $thread->delete();
+
+        return redirect()->to('/threads');
     }
 }

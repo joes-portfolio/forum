@@ -9,10 +9,26 @@
     <div class="flex space-x-10 max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div class="w-2/3">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-          <div class="p-6 bg-white border-b border-gray-200">
-            <p>
-              <a href="/profiles/{{ $thread->creator->name }}">{{ $thread->creator->name }}</a> posted:
-            </p>
+          <div class="p-6 bg-white border-b border-gray-200 space-y-2">
+            <div class="flex justify-between items-end">
+              <p>
+                <a href="/profiles/{{ $thread->creator->name }}">{{ $thread->creator->name }}</a> posted:
+              </p>
+
+              @can('update', $thread)
+                <form action="{{ $thread->path() }}" method="post">
+                  @csrf
+                  @method('DELETE')
+
+                  <button
+                    type="submit"
+                    class="inline-flex items-center px-4 py-2 border border-red-500 text-sm font-medium rounded-md shadow-sm text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"
+                  >
+                    Delete Thread
+                  </button>
+                </form>
+              @endcan
+            </div>
             <hr />
             <article>
               {{ $thread->body }}

@@ -1,5 +1,5 @@
 <div>
-  <div class="flex justify-between">
+  <div class="flex justify-between items-end">
     <p>
       <a href="/profiles/{{ $thread->creator->name }}">{{ $thread->creator->name }}</a>
       said {{ $reply->created_at->diffForHumans() }}
