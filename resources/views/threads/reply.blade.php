@@ -1,7 +1,7 @@
 <div>
   <div class="flex justify-between">
     <p>
-      <a href="#">{{ $reply->owner->name }}</a>
+      <a href="/profiles/{{ $thread->creator->name }}">{{ $thread->creator->name }}</a>
       said {{ $reply->created_at->diffForHumans() }}
     </p>
 
