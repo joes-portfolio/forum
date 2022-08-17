@@ -20,6 +20,8 @@ class RepliesController extends Controller
             'user_id' => auth()->id()
         ]);
 
+        session()->flash('alert', 'You left a reply successfully.');
+
         return redirect()->to($thread->path());
     }
 

@@ -50,6 +50,8 @@ class ThreadsController
             'body' => $request->get('body'),
         ]);
 
+        session()->flash('alert', 'Thread published successfully!');
+
         return redirect()->to($thread->path());
     }
 
