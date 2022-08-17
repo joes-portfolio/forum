@@ -73,7 +73,6 @@ class ThreadsController
     {
         $this->authorize('update', $thread);
 
-        $thread->replies()->delete();
         $thread->delete();
 
         return redirect()->to('/threads');

@@ -15,6 +15,10 @@ trait RecordsActivity
         foreach (self::getRecordActivityForEvents() as $event) {
             static::$event(fn (self $model) => $model->recordActivity($event));
         }
+
+        static::deleting(function (self $model) {
+            $model->activity()->delete();
+        });
     }
 
     protected static function getRecordActivityForEvents(): array

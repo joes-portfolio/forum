@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Activity;
 use App\Models\Reply;
 use App\Models\Thread;
 use Database\Factories\ChannelFactory;
@@ -173,4 +174,12 @@ test('authorized users can delete threads', function () {
 
     assertDatabaseMissing((new Thread)->getTable(), ['id' => $thread->id]);
     assertDatabaseMissing((new Reply)->getTable(), ['id' => $reply->id]);
+    assertDatabaseMissing((new Activity)->getTable(), [
+        'subject_id' => $thread->id,
+        'subject_type' => $thread::class,
+    ]);
+    assertDatabaseMissing((new Activity)->getTable(), [
+        'subject_id' => $reply->id,
+        'subject_type' => $reply::class,
+    ]);
 });
