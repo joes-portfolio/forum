@@ -1,4 +1,4 @@
-<div>
+<div id="reply-{{ $reply->id }}">
   <div class="flex justify-between items-end">
     <p>
       <a href="/profiles/{{ $reply->owner->name }}">{{ $reply->owner->name }}</a>

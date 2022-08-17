@@ -29,4 +29,9 @@ class Reply extends Model
     {
         return $this->belongsTo(Thread::class);
     }
+
+    public function path(): string
+    {
+        return "{$this->thread->path()}#reply-{$this->id}";
+    }
 }
