@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Thread extends Model
 {
+    use RecordsActivity;
+
     protected $fillable = [
         'body',
         'title',

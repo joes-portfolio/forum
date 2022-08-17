@@ -57,7 +57,7 @@ class ThreadsController
     {
         return view('threads.show', [
             'thread' => $thread,
-            'replies' => $thread->replies()->paginate(),
+            'replies' => $thread->replies()->oldest()->paginate(),
         ]);
     }
 

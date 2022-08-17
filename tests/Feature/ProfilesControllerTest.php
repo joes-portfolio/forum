@@ -13,10 +13,11 @@ it('displays a user profile', function () {
 });
 
 it('displays all threads of the user', function () {
-    $user = create(UserFactory::new());
-    $thread = create(ThreadFactory::new(['user_id' => $user->id]));
+    signIn();
 
-    get("/profiles/$user->name")
+    $thread = create(ThreadFactory::new(['user_id' => auth()->user()]));
+
+    get("/profiles/" . auth()->user()->name)
         ->assertSee($thread->title)
         ->assertSee($thread->body);
 });
