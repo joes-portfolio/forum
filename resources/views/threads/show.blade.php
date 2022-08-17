@@ -7,7 +7,7 @@
 
   <div class="py-12">
     <div class="flex space-x-10 max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <div class="w-2/3">
+      <div class="w-2/3 space-y-6">
         <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
           <div class="px-4 py-5 sm:px-6">
             <div class="flex justify-between items-end">
@@ -37,17 +37,13 @@
           </div>
         </div>
 
-        <br />
-
         @foreach($replies as $reply)
           @include("threads.reply")
-          <br />
         @endforeach
 
         {{ $replies->links() }}
 
         @auth
-          <br />
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 bg-white border-b border-gray-200">
               @include('threads.reply-form')

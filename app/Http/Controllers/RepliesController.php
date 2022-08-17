@@ -28,11 +28,22 @@ class RepliesController extends Controller
         return redirect()->to($thread->path());
     }
 
-    public function destroy(Reply $reply)
+    public function update(Request $request, Reply $reply)
     {
         $this->authorize('update', $reply);
 
-        $reply->delete();
+        $reply->update(['body' => $request->post('body')]);
+    }
+
+    public function destroy(Request $request, Reply $reply)
+    {
+        $this->authorize('update', $reply);
+
+        // $reply->delete();
+
+        if ($request->expectsJson()) {
+            return response()->json(['message' => 'Reply removed successfully.']);
+        }
 
         session()->flash('alert', 'Reply removed successfully.');
 

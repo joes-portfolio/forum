@@ -6,9 +6,11 @@ use Database\Factories\ThreadFactory;
 use Database\Factories\UserFactory;
 
 use function Pest\Laravel\actingAs;
+use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\delete;
 use function Pest\Laravel\get;
+use function Pest\Laravel\patch;
 use function Pest\Laravel\post;
 
 test('unauthenticated users cannot participate in threads', function () {
@@ -67,4 +69,31 @@ test('authorized users can delete replies', function () {
         'id' => $reply->id,
         'user_id' => $reply->user_id,
     ]);
+});
+
+test('authorized users can update replies', function () {
+    signIn();
+
+    $reply = create(ReplyFactory::new(['user_id' => auth()->id()]));
+
+    $updatedBody = 'new body';
+
+    patch("/replies/{$reply->id}", ['body' => $updatedBody]);
+
+    assertDatabaseHas((new Reply)->getTable(), [
+        'id' => $reply->id,
+        'body' => $updatedBody,
+    ]);
+});
+
+test('unauthorized users cannot udpate replies', function () {
+    $reply = create(ReplyFactory::new());
+
+    patch("/replies/{$reply->id}", ['body' => 'new body'])
+        ->assertRedirect('/login');
+
+    signIn();
+
+    patch("/replies/{$reply->id}", ['body' => 'new body'])
+        ->assertForbidden();
 });
