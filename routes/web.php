@@ -30,6 +30,7 @@ Route::get('/threads/{channel:slug?}', [ThreadsController::class, 'index']);
 Route::get('/threads/{channel}/{thread}', [ThreadsController::class, 'show']);
 Route::delete('/threads/{channel}/{thread}', [ThreadsController::class, 'destroy'])->middleware('auth');
 Route::post('/threads/{channel}/{thread}/replies', [RepliesController::class, 'store'])->middleware('auth');
+Route::delete('/replies/{reply}', [RepliesController::class, 'destroy'])->middleware('auth');
 Route::post('/replies/{reply}/favorites', [FavoritesController::class, 'store'])->middleware('auth');
 
 Route::get('/profiles/{profileUser:name}', [ProfilesController::class, 'show']);

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Reply;
+use App\Policies\ReplyPolicy;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Thread;
 use App\Policies\ThreadPolicy;
@@ -16,6 +18,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Thread::class => ThreadPolicy::class,
+        Reply::class => ReplyPolicy::class,
     ];
 
     /**
@@ -28,7 +31,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::before(function ($user) {
-            if ($user->email === 'john@mail.com') {
+            if ($user->id === 1) {
                 return true;
             }
         });

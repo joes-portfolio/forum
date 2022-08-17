@@ -1,14 +1,15 @@
 <?php
 
+use App\Models\Reply;
 use Database\Factories\ReplyFactory;
 use Database\Factories\ThreadFactory;
 use Database\Factories\UserFactory;
-use Illuminate\Auth\AuthenticationException;
 
 use function Pest\Laravel\actingAs;
+use function Pest\Laravel\assertDatabaseMissing;
+use function Pest\Laravel\delete;
 use function Pest\Laravel\get;
 use function Pest\Laravel\post;
-use function Pest\Laravel\withoutExceptionHandling;
 
 test('unauthenticated users cannot participate in threads', function () {
     $thread = ThreadFactory::new()->create();
@@ -40,4 +41,30 @@ test('reply requires a body', function () {
 
     post("{$thread->path()}/replies", $reply)
         ->assertSessionHasErrors('body');
+});
+
+test('unauthorized users cannot delete replies', function () {
+    $reply = create(ReplyFactory::new());
+
+    delete("/replies/{$reply->id}")
+        ->assertRedirect('/login');
+
+    signIn();
+
+    delete("/replies/{$reply->id}")
+        ->assertForbidden();
+});
+
+test('authorized users can delete replies', function () {
+    signIn();
+
+    $reply = create(ReplyFactory::new(['user_id' => auth()->id()]));
+
+    delete("/replies/{$reply->id}")
+        ->assertRedirect();
+
+    assertDatabaseMissing((new Reply)->getTable(), [
+        'id' => $reply->id,
+        'user_id' => $reply->user_id,
+    ]);
 });
