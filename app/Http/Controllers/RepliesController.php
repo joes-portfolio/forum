@@ -39,7 +39,7 @@ class RepliesController extends Controller
     {
         $this->authorize('update', $reply);
 
-        // $reply->delete();
+        $reply->delete();
 
         if ($request->expectsJson()) {
             return response()->json(['message' => 'Reply removed successfully.']);
