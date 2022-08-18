@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait Favoritable
 {
+    protected static function bootFavoritable(): void
+    {
+        static::deleting(function (self $model) {
+            $model->favorites->each->delete();
+        });
+    }
+
     public function favorites(): MorphMany
     {
         return $this->morphMany(Favorite::class, 'favorited');
@@ -19,20 +26,22 @@ trait Favoritable
         });
     }
 
-    public function favorite(): Favorite
+    public function favorite(): void
     {
-        return $this->favorites()
+        $this->favorites()
             ->updateOrCreate([
                 'user_id' => auth()->id()
             ]);
     }
 
-    public function unfavorite(): bool
+    public function unfavorite(): void
     {
-        return $this->favorites()
+        $this->favorites()
             ->where([
                 'user_id' => auth()->id()
             ])
+            ->get()
+            ->each
             ->delete();
     }
 }
