@@ -5,7 +5,7 @@
     </h2>
   </x-slot>
 
-  <div class="py-12">
+  <div id="thread-app" class="py-12">
     <div class="flex space-x-10 max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div class="w-2/3 space-y-6">
         <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
