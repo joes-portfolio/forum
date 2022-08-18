@@ -1,5 +1,5 @@
 <div
-  x-data="replyComponent(@js($reply->only(['id', 'body', 'thread_id'])))"
+  x-data="replyComponent(@js($reply->jsProperties()))"
   x-show="!deleted"
   x-transition.duration.300ms
   class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200"
@@ -12,17 +12,22 @@
       </p>
 
       @auth()
-        <form action="{{ url("/replies/{$reply->id}/favorites") }}" method="post">
-          @csrf
+        <button
+          x-data="favoriteButton"
+          x-on:click="toggle"
+          x-bind:class="{
+            'border-gray-300 text-gray-700 hover:bg-gray-50': !active,
+            'border-transparent text-indigo-700 bg-indigo-100 hover:bg-indigo-200': active
+          }"
+          type="button"
+          class="inline-flex items-center px-2.5 py-1.5 border text-sm font-medium rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
 
-          <button
-            @disabled($reply->isFavorited())
-            type="submit"
-            class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-indigo-600 bg-white hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-75 disabled:hover:bg-white"
-          >
-            {{ $reply->favorites_count }} {{ str('favorite')->plural($reply->favorites_count) }}
-          </button>
-        </form>
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+          <span x-text="count">{{ $reply->favorites_count }}</span>
+        </button>
       @endauth
     </div>
   </div>

@@ -8,8 +8,13 @@ class FavoritesController extends Controller
 {
     public function store(Reply $reply)
     {
-        $reply->favorite(auth()->id());
+        $reply->favorite();
 
         return redirect()->back();
+    }
+
+    public function destroy(Reply $reply)
+    {
+        $reply->unfavorite();
     }
 }

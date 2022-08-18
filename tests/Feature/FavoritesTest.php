@@ -2,6 +2,7 @@
 
 use Database\Factories\ReplyFactory;
 
+use function Pest\Laravel\delete;
 use function Pest\Laravel\post;
 
 test('an unauthenticated user cannot favorite replies', function () {
@@ -18,6 +19,19 @@ test('an authenticated user can favorite replies', function () {
 
     expect($reply->favorites)
         ->toHaveCount(1);
+});
+
+test('an authenticated user can unfavorite replies', function () {
+    signIn();
+
+    $reply = create(ReplyFactory::new());
+
+    $reply->favorite();
+
+    delete("/replies/{$reply->id}/favorites");
+
+    expect($reply->favorites)
+        ->toHaveCount(0);
 });
 
 test('an authenticated user can favorite a reply once', function () {

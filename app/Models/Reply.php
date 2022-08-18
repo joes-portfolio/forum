@@ -20,6 +20,10 @@ class Reply extends Model
         'favorites',
     ];
 
+    protected $appends = [
+        'is_favorited'
+    ];
+
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -33,5 +37,15 @@ class Reply extends Model
     public function path(): string
     {
         return "{$this->thread->path()}#reply-{$this->id}";
+    }
+
+    public function jsProperties(): array
+    {
+        return $this->only([
+            'id',
+            'body',
+            'favorites_count',
+            'is_favorited',
+        ]);
     }
 }
