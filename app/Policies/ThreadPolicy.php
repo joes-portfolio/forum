@@ -11,6 +11,8 @@ class ThreadPolicy
 {
     use HandlesAuthorization;
 
+    public const UPDATE = 'update';
+
     public function viewAny(User $user): bool
     {
     }

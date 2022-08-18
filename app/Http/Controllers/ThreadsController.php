@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Filters\ThreadFilters;
+use App\Http\Resources\ReplyResource;
+use App\Http\Resources\ThreadResource;
 use App\Models\Channel;
 use App\Models\Thread;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -58,8 +60,8 @@ class ThreadsController
     public function show($channel, Thread $thread)
     {
         return view('threads.show', [
-            'thread' => $thread,
-            'replies' => $thread->replies()->oldest()->paginate(),
+            'thread' => ThreadResource::make($thread),
+            'replies' => ReplyResource::collection($thread->replies),
         ]);
     }
 

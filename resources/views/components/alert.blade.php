@@ -1,4 +1,5 @@
 <div
+  x-cloak
   x-data="alert(@js(session('alert')))"
   class="fixed z-10 bottom-6 right-6 rounded-md bg-green-100 p-4"
   x-show="show"
