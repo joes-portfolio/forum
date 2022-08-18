@@ -8,7 +8,7 @@
   <div id="thread-view" class="py-12">
     <v-thread-view
       :data="@js($thread)"
-      v-slot="{ count, decrement, auth, data }"
+      v-slot="{ count, decrement, auth, data, increment }"
     >
       <div class="flex space-x-10 max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="w-2/3 space-y-6">
@@ -35,32 +35,29 @@
               </div>
             </div>
             <div class="px-4 py-5 sm:p-6">
-              <article>
-                {{ $thread->body }}
-              </article>
+              <article v-text="data.body"></article>
             </div>
           </div>
 
           {{--{{ $replies->links() }}--}}
 
           <v-replies
-            v-slot="{ items, remove }"
+            v-slot="{ items, remove, add }"
             :data="@js($replies)"
+            @added="increment"
             @removed="decrement"
           >
             @include("threads.reply")
-          </v-replies>
 
-          <div v-if="auth" class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 bg-white border-b border-gray-200">
+            <div v-if="auth" class="sm:rounded-lg">
               @include('threads.reply-form')
             </div>
-          </div>
-          <div v-else class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 bg-white border-b border-gray-200">
-              <p class="flex justify-center">Please&nbsp;<a href="{{ route('login') }}">sign in</a> to participate.</p>
+            <div v-else class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+              <div class="p-6 bg-white border-b border-gray-200">
+                <p class="flex justify-center">Please&nbsp;<a href="{{ route('login') }}">sign in</a>&nbsp;to participate.</p>
+              </div>
             </div>
-          </div>
+          </v-replies>
         </div>
 
         <div class="w-1/3">

@@ -7,6 +7,7 @@ import ThreadView from './pages/Thread.vue';
 import Replies from './components/Replies.vue';
 import Reply from './components/Reply.vue';
 import FavoriteButton from './components/FavoriteButton.vue';
+import NewReplyForm from './components/NewReplyForm.vue';
 import { auth, can } from './utils';
 
 Alpine.data('alert', alert);
@@ -23,6 +24,7 @@ if (document.getElementById('thread-view')) {
     app.component('v-replies', Replies);
     app.component('v-reply', Reply);
     app.component('v-favorite-button', FavoriteButton);
+    app.component('v-new-reply-form', NewReplyForm);
 
     app.mount('#thread-view');
 }

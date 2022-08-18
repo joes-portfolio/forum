@@ -62,8 +62,8 @@ class Thread extends Model
         return "/threads/{$this->channel->slug}/{$this->id}";
     }
 
-    public function addReply(array $reply): void
+    public function addReply(array $reply): Reply
     {
-        $this->replies()->create($reply);
+        return $this->replies()->create($reply);
     }
 }

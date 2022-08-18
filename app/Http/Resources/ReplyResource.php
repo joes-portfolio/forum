@@ -20,10 +20,10 @@ class ReplyResource extends JsonResource
             'created_at' => $this->created_at->diffForHumans(),
             'favorites_count' => $this->favorites_count,
 
-            'owner' => $this->whenLoaded('owner'),
+            'owner' => UserResource::make($this->whenLoaded('owner')),
 
             'can' => [
-                ReplyPolicy::UPDATE => auth()->user()->can(ReplyPolicy::UPDATE, $this->resource),
+                ReplyPolicy::UPDATE => auth()->user()?->can(ReplyPolicy::UPDATE, $this->resource),
             ],
         ];
     }

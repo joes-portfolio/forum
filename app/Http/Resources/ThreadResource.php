@@ -22,10 +22,10 @@ class ThreadResource extends JsonResource
             'replies_count' => $this->replies_count,
             'title' => $this->title,
 
-            'creator' => $this->whenLoaded('creator'),
+            'creator' => UserResource::make($this->whenLoaded('creator')),
 
             'can' => [
-                ThreadPolicy::UPDATE => auth()->user()->can(ThreadPolicy::UPDATE, $this->resource),
+                ThreadPolicy::UPDATE => auth()->user()?->can(ThreadPolicy::UPDATE, $this->resource),
             ],
         ];
     }
