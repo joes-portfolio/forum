@@ -38,14 +38,4 @@ class Reply extends Model
     {
         return "{$this->thread->path()}#reply-{$this->id}";
     }
-
-    public function jsProperties(): array
-    {
-        return $this->only([
-            'id',
-            'body',
-            'favorites_count',
-            'is_favorited',
-        ]);
-    }
 }

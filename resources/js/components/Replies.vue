@@ -1,10 +1,35 @@
 <script setup>
-import { reactive } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
+import axios from 'axios';
 
-const props = defineProps(['data']);
 const emit = defineEmits(['added', 'removed']);
+const items = ref([]);
+const pagination = reactive({
+  links: {},
+  meta: {},
+});
 
-const items = reactive(props.data);
+onMounted(() => fetch());
+
+async function fetch(page) {
+  const { data } = await axios.get(url(page));
+
+  refresh(data);
+}
+
+function url(page) {
+  if (! page) {
+    page = (new URLSearchParams(window.location.search)).get('page') || 1;
+  }
+
+  return `${location.pathname}/replies?page=${page}`;
+}
+
+function refresh({ data, links, meta }) {
+  items.value = data;
+  pagination.links = links;
+  pagination.meta = meta;
+}
 
 function add(reply) {
   items.push(reply);
@@ -20,7 +45,9 @@ function remove(index) {
 <template>
   <slot
     :items="items"
+    :pagination="pagination"
     :add="add"
     :remove="remove"
+    :fetch="fetch"
   />
 </template>

@@ -10,6 +10,7 @@ use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\delete;
 use function Pest\Laravel\get;
+use function Pest\Laravel\getJson;
 use function Pest\Laravel\patch;
 use function Pest\Laravel\post;
 
@@ -86,7 +87,7 @@ test('authorized users can update replies', function () {
     ]);
 });
 
-test('unauthorized users cannot udpate replies', function () {
+test('unauthorized users cannot update replies', function () {
     $reply = create(ReplyFactory::new());
 
     patch("/replies/{$reply->id}", ['body' => 'new body'])
@@ -96,4 +97,16 @@ test('unauthorized users cannot udpate replies', function () {
 
     patch("/replies/{$reply->id}", ['body' => 'new body'])
         ->assertForbidden();
+});
+
+test('users can request replies for a thread', function () {
+    $thread = create(ThreadFactory::new());
+    create(ReplyFactory::new(['thread_id' => $thread->id])->count(2));
+
+    $response = getJson($thread->path() . '/replies');
+
+    expect($response->json('data'))
+        ->toHaveCount(1)
+        ->and($response->json('meta'))
+        ->toHaveKey('total', 2);
 });

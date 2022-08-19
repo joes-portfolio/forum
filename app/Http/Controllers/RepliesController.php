@@ -14,6 +14,13 @@ class RepliesController extends Controller
 {
     use AuthorizesRequests;
 
+    public function index($channel, Thread $thread)
+    {
+        $replies = $thread->replies()->paginate(20);
+
+        return ReplyResource::collection($replies);
+    }
+
     public function store(Request $request, $channelId, Thread $thread): JsonResponse|RedirectResponse
     {
         $request->validate([

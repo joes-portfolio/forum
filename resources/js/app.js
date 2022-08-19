@@ -8,6 +8,7 @@ import Replies from './components/Replies.vue';
 import Reply from './components/Reply.vue';
 import FavoriteButton from './components/FavoriteButton.vue';
 import NewReplyForm from './components/NewReplyForm.vue';
+import Paginator from './components/Paginator.vue';
 import { auth, can } from './utils';
 
 Alpine.data('alert', alert);
@@ -20,6 +21,7 @@ app.provide('auth', auth);
 app.provide('can', can);
 
 if (document.getElementById('thread-view')) {
+    app.component('v-paginator', Paginator);
     app.component('v-thread-view', ThreadView);
     app.component('v-replies', Replies);
     app.component('v-reply', Reply);

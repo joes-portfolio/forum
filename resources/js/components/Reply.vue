@@ -43,7 +43,8 @@ async function destroy() {
 
     flash(response.data.message);
   } catch (e) {
-    flash(e.response.data.message);
+    console.log(e);
+    // flash(e.response.data.message);
   }
 }
 </script>

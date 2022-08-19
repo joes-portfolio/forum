@@ -39,15 +39,20 @@
             </div>
           </div>
 
-          {{--{{ $replies->links() }}--}}
-
           <v-replies
-            v-slot="{ items, remove, add }"
-            :data="@js($replies)"
+            v-slot="{ items, remove, add, pagination, fetch }"
             @added="increment"
             @removed="decrement"
           >
             @include("threads.reply")
+
+            <v-paginator
+              :data="pagination"
+              v-slot="{ shouldPaginate, prevUrl, nextUrl, prevPage, nextPage, meta, setPage }"
+              @changed="fetch"
+            >
+              <x-paginator />
+            </v-paginator>
 
             <div v-if="auth" class="sm:rounded-lg">
               @include('threads.reply-form')

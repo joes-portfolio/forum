@@ -1,4 +1,5 @@
 <v-reply
+  v-cloak
   v-for="(reply, index) in items"
   :key="reply.id"
   :data="reply"

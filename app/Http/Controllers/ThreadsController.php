@@ -61,7 +61,6 @@ class ThreadsController
     {
         return view('threads.show', [
             'thread' => ThreadResource::make($thread),
-            'replies' => ReplyResource::collection($thread->replies),
         ]);
     }
 
