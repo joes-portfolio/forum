@@ -29,6 +29,8 @@ function refresh({ data, links, meta }) {
   items.value = data;
   pagination.links = links;
   pagination.meta = meta;
+
+  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 }
 
 function add(reply) {
