@@ -9,7 +9,6 @@ use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\delete;
-use function Pest\Laravel\get;
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\patch;
 use function Pest\Laravel\post;
@@ -32,8 +31,9 @@ test('authenticated users can participate in threads', function () {
     post("{$thread->path()}/replies", $reply)
         ->assertRedirect($thread->path());
 
-    get($thread->path())
-        ->assertSee($reply['body']);
+    assertDatabaseHas((new Reply)->getTable(), [
+        'body' => $reply['body'],
+    ]);
 });
 
 test('reply requires a body', function () {
@@ -106,7 +106,7 @@ test('users can request replies for a thread', function () {
     $response = getJson($thread->path() . '/replies');
 
     expect($response->json('data'))
-        ->toHaveCount(1)
+        ->toHaveCount(2)
         ->and($response->json('meta'))
         ->toHaveKey('total', 2);
 });

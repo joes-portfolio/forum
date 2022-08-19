@@ -32,14 +32,6 @@ test('a user can read a thread', function () {
         ->assertSee($this->thread->title);
 });
 
-test('a user can read replies of a thread', function () {
-    $reply = create(ReplyFactory::new(['thread_id' => $this->thread->id]));
-
-    get($this->thread->path())
-        ->assertOk()
-        ->assertSee($reply->body);
-});
-
 test('authenticated user can create a thread', function () {
     signIn(create(UserFactory::new()));
 

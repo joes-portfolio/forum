@@ -34,12 +34,12 @@ function refresh({ data, links, meta }) {
 }
 
 function add(reply) {
-  items.push(reply);
+  items.value.push(reply);
   emit('added');
 }
 
 function remove(index) {
-  items.splice(index, 1);
+  items.value.splice(index, 1);
   emit('removed');
 }
 </script>
