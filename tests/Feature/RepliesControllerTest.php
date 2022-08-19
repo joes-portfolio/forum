@@ -34,6 +34,9 @@ test('authenticated users can participate in threads', function () {
     assertDatabaseHas((new Reply)->getTable(), [
         'body' => $reply['body'],
     ]);
+
+    expect($thread->fresh()->replies_count)
+        ->toEqual(1);
 });
 
 test('reply requires a body', function () {
@@ -70,6 +73,9 @@ test('authorized users can delete replies', function () {
         'id' => $reply->id,
         'user_id' => $reply->user_id,
     ]);
+
+    expect($reply->thread->fresh()->replies_count)
+        ->toEqual(0);
 });
 
 test('authorized users can update replies', function () {

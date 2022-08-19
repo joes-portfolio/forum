@@ -139,6 +139,18 @@ test('a user can filter threads by popularity', function () {
         ]);
 });
 
+test('a user can filter threads that are unanswered', function () {
+    $threadWithTwoReplies = create(ThreadFactory::new());
+    create(ReplyFactory::new(['thread_id' => $threadWithTwoReplies->id])->count(2));
+
+    $threadWithZeroReplies = $this->thread;
+
+    get('/threads?unanswered=1')
+        ->assertOk()
+        ->assertSee($threadWithZeroReplies->title)
+        ->assertDontSee($threadWithTwoReplies->title);
+});
+
 test('unauthorized users cannot delete threads', function () {
     $thread = create(ThreadFactory::new());
 

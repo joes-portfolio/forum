@@ -7,9 +7,9 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class ThreadFilters extends Filters
 {
-    protected array $filters = ['by', 'popular'];
+    protected array $filters = ['by', 'popular', 'unanswered'];
 
-    public function by(string $userName): Builder
+    protected function by(string $userName): Builder
     {
         $user = User::query()
             ->where('name', $userName)
@@ -18,8 +18,13 @@ class ThreadFilters extends Filters
         return $this->builder->where('user_id', $user->id);
     }
 
-    public function popular(): Builder
+    protected function popular(): Builder
     {
         return $this->builder->reorder('replies_count', 'desc');
+    }
+
+    protected function unanswered(): Builder
+    {
+        return $this->builder->where('replies_count', 0);
     }
 }

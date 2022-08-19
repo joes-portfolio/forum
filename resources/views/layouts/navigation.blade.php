@@ -45,6 +45,10 @@
                 Popular Threads
               </x-dropdown-link>
 
+              <x-dropdown-link href="/threads?unanswered=1">
+                Unanswered Threads
+              </x-dropdown-link>
+
               @auth()
                 <x-dropdown-link href="/threads?by={{ auth()->user()->name }}">
                   My Threads

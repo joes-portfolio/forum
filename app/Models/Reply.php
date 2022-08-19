@@ -24,6 +24,17 @@ class Reply extends Model
         'is_favorited'
     ];
 
+    protected static function booted(): void
+    {
+        static::created(function (self $reply) {
+            $reply->thread->increment('replies_count');
+        });
+
+        static::deleted(function (self $reply) {
+            $reply->thread->decrement('replies_count');
+        });
+    }
+
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->foreignId('user_id');
             $table->foreignId('channel_id');
 
+            $table->unsignedInteger('replies_count')->default(0);
             $table->string('title');
             $table->text('body');
 
