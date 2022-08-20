@@ -24,16 +24,8 @@ class Thread extends Model
         'creator',
     ];
 
-    protected $casts = [
-        'replies_count',
-    ];
-
     protected static function booted(): void
     {
-        // static::addGlobalScope('replies_count', function (Builder $builder) {
-        //     $builder->withCount('replies');
-        // });
-
         static::deleting(function (self $thread) {
             $thread->replies->each->delete();
         });

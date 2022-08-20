@@ -43,9 +43,6 @@ it('can add a reply', function () {
 });
 
 it('belongs to a channel', function () {
-    /* @var \App\Models\Thread $thread */
-    $thread = create(ThreadFactory::new());
-
-    expect($thread->channel)
+    expect($this->thread->channel)
         ->toBeInstanceOf(Channel::class);
 });
