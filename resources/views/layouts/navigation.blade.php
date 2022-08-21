@@ -96,7 +96,11 @@
 
       @auth
       <!-- Settings Dropdown -->
-      <div class="hidden sm:flex sm:items-center sm:ml-6">
+      <div class="hidden sm:flex sm:items-center sm:ml-6 space-x-2">
+        <div id="notifications">
+          <v-user-notifications></v-user-notifications>
+        </div>
+
         <x-dropdown align="right" width="48">
           <x-slot name="trigger">
             <button

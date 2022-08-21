@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Filters\ThreadFilters;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -48,6 +49,20 @@ class Thread extends Model
             ->withCount('favorites');
     }
 
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(ThreadSubscription::class);
+    }
+
+    public function isSubscribedTo(): Attribute
+    {
+        return Attribute::get(function () {
+            return $this->subscriptions()
+                ->where('user_id', auth()->id())
+                ->exists();
+        });
+    }
+
     public function scopeFilter(Builder $query, ThreadFilters $filters)
     {
         $filters->apply($query);
@@ -58,8 +73,33 @@ class Thread extends Model
         return "/threads/{$this->channel->slug}/{$this->id}";
     }
 
-    public function addReply(array $reply): Reply
+    public function addReply(array $attributes): Reply
     {
-        return $this->replies()->create($reply);
+        $reply = $this->replies()->create($attributes);
+
+        $this->notifySubscribers($reply);
+
+        return $reply;
+    }
+
+    public function subscribe(int $userId = null): void
+    {
+        $this->subscriptions()->create([
+            'user_id' => $userId ?: auth()->id(),
+        ]);
+    }
+
+    public function unsubscribe(int $userId = null): void
+    {
+        $this->subscriptions()
+            ->where('user_id', $userId ?: auth()->id())
+            ->delete();
+    }
+
+    public function notifySubscribers($reply): void
+    {
+        $this->subscriptions
+            ->where('user_id', '!=', $reply->user_id)
+            ->each(fn ($subscription) => $subscription->notify($reply));
     }
 }

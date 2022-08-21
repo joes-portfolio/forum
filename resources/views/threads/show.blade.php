@@ -54,7 +54,7 @@
               <x-paginator />
             </v-paginator>
 
-            <div v-if="auth" class="sm:rounded-lg">
+            <div v-if="auth.check" class="sm:rounded-lg">
               @include('threads.reply-form')
             </div>
             <div v-else class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -67,12 +67,14 @@
 
         <div class="w-1/3">
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 bg-white border-b border-gray-200">
+            <div class="p-6 bg-white border-b border-gray-200 space-y-2">
               <p>
                 This thread was published <span v-text="data.created_at"></span> by
                 <a :href="data.creator.name" v-text="data.creator.name"></a>,
                 and currently has <span v-text="count"></span> replies.
               </p>
+
+              <v-subscribe-button :active="@js($thread->is_subscribed_to)"></v-subscribe-button>
             </div>
           </div>
         </div>

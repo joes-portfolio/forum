@@ -59,6 +59,8 @@ class ThreadsController
 
     public function show($channel, Thread $thread)
     {
+        $thread->append('is_subscribed_to');
+
         return view('threads.show', [
             'thread' => ThreadResource::make($thread),
         ]);

@@ -21,6 +21,7 @@ class ThreadResource extends JsonResource
             'path' => url($this->path()),
             'replies_count' => $this->replies_count,
             'title' => $this->title,
+            'is_subscribed_to' => $this->is_subscribed_to,
 
             'creator' => UserResource::make($this->whenLoaded('creator')),
 

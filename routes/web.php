@@ -4,6 +4,8 @@ use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\ProfilesController;
 use App\Http\Controllers\RepliesController;
 use App\Http\Controllers\ThreadsController;
+use App\Http\Controllers\ThreadSubscriptionsController;
+use App\Http\Controllers\UserNotificationsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,6 +40,15 @@ Route::delete('/replies/{reply}', [RepliesController::class, 'destroy'])->middle
 Route::post('/replies/{reply}/favorites', [FavoritesController::class, 'store'])->middleware('auth');
 Route::delete('/replies/{reply}/favorites', [FavoritesController::class, 'destroy'])->middleware('auth');
 
+Route::post('/threads/{channel}/{thread}/subscriptions', [ThreadSubscriptionsController::class, 'store'])
+    ->middleware('auth');
+Route::delete('/threads/{channel}/{thread}/subscriptions', [ThreadSubscriptionsController::class, 'destroy'])
+    ->middleware('auth');
+
 Route::get('/profiles/{profileUser:name}', [ProfilesController::class, 'show']);
+Route::get('/profiles/{profileUser:name}/notifications', [UserNotificationsController::class, 'index'])
+    ->middleware('auth');
+Route::patch('/profiles/{profileUser:name}/notifications/{notification}', [UserNotificationsController::class, 'update'])
+    ->middleware('auth');
 
 require __DIR__.'/auth.php';
