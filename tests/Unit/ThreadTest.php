@@ -92,3 +92,15 @@ it('knows if the authenticated user is subscribed', function () {
 
     expect($thread->is_subscribed_to)->toBeTrue();
 });
+
+it("can check if authenticated users have viewed it's latest updates", function () {
+    signIn();
+
+    $user = auth()->user();
+
+    expect($this->thread->hasUpdatesFor($user))->toBeTrue();
+
+    $user->read($this->thread);
+
+    expect($this->thread->hasUpdatesFor($user))->toBeFalse();
+});

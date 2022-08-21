@@ -61,6 +61,10 @@ class ThreadsController
     {
         $thread->append('is_subscribed_to');
 
+        if (auth()->check()) {
+            auth()->user()->read($thread);
+        }
+
         return view('threads.show', [
             'thread' => ThreadResource::make($thread),
         ]);

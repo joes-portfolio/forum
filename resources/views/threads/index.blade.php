@@ -12,18 +12,15 @@
           <div class="p-6 bg-white border-b border-gray-200">
             <article>
               <div class="flex items-center space-x-2">
-                <h4>
-                  <strong>
-                    <a href="{{ $thread->path() }}">
-                      {{ $thread->title }}
-                    </a>
-                  </strong>
+                <h4 @class(["text-lg", 'font-bold' => auth()->check() && $thread->hasUpdatesFor(auth()->user())])>
+                  <a href="{{ $thread->path() }}">
+                    {{ $thread->title }}
+                  </a>
                 </h4>
                 <span>&middot;</span>
-                <strong>
-                  <a href="{{ $thread->path() }}">
-                    {{ $thread->replies_count }} {{ str('reply')->plural($thread->replies_count) }}</a>
-                </strong>
+                <a href="{{ $thread->path() }}">
+                  {{ $thread->replies_count }} {{ str('reply')->plural($thread->replies_count) }}
+                </a>
               </div>
               <div>{{ $thread->body }}</div>
             </article>
