@@ -17,7 +17,7 @@ async function store() {
     emit('added', data);
     flash('Thread published successfully!');
   } catch (e) {
-    console.log(e);
+    flash(e.response.data, 'danger');
   }
 }
 </script>

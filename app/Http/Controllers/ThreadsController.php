@@ -45,7 +45,17 @@ class ThreadsController
             'channel_id' => ['required', 'exists:channels,id'],
         ]);
 
-        $spam->detect($attributes['body']);
+        try {
+            $spam->detect($attributes['title']);
+            $spam->detect($attributes['body']);
+        } catch (\Exception $exception) {
+            session()->flash('alert', [
+                'message' => $exception->getMessage(),
+                'level' => 'danger'
+            ]);
+
+            return redirect()->back();
+        }
 
         $thread = Thread::create(array_merge($attributes, [
             'user_id' => auth()->id(),

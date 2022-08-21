@@ -31,16 +31,16 @@ class RepliesController extends Controller
 
         try {
             $spam->detect($attributes['body']);
-
-            $reply = $thread->addReply(array_merge($attributes, [
-                'user_id' => auth()->id()
-            ]));
         } catch (\Exception $exception) {
             return response()->json(
-                'Sorry, the reply could not be saved.',
+                $exception->getMessage(),
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
+
+        $reply = $thread->addReply(array_merge($attributes, [
+            'user_id' => auth()->id()
+        ]));
 
         if ($request->expectsJson()) {
             $reply->load('owner');
@@ -60,7 +60,14 @@ class RepliesController extends Controller
             'body' => ['required']
         ]);
 
-        $spam->detect($attributes['body']);
+        try {
+            $spam->detect($attributes['body']);
+        } catch (\Exception $exception) {
+            return response()->json(
+                $exception->getMessage(),
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
 
         $reply->update($attributes);
     }

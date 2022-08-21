@@ -27,13 +27,17 @@ function setBody(e) {
   body.value = e.target.value;
 }
 
-function update() {
-  axios.patch(`/replies/${data.id}`, {
-    body: body.value,
-  });
+async function update() {
+  try {
+    await axios.patch(`/replies/${data.id}`, {
+      body: body.value,
+    });
 
-  editing.value = false;
-  flash('Your reply was updated.');
+    editing.value = false;
+    flash('Your reply was updated.');
+  } catch (e) {
+    flash(e.response.data, 'danger');
+  }
 }
 
 async function destroy() {
