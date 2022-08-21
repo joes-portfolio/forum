@@ -36,7 +36,7 @@ async function update() {
     editing.value = false;
     flash('Your reply was updated.');
   } catch (e) {
-    flash(e.response.data, 'danger');
+    flash(e.response.data.message, 'danger');
   }
 }
 

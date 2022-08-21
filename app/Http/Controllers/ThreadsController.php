@@ -6,7 +6,7 @@ use App\Filters\ThreadFilters;
 use App\Http\Resources\ThreadResource;
 use App\Models\Channel;
 use App\Models\Thread;
-use App\Services\Spam\Spam;
+use App\Rules\SpamFreeRule;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
@@ -37,25 +37,13 @@ class ThreadsController
         return view('threads.create');
     }
 
-    public function store(Request $request, Spam $spam)
+    public function store(Request $request)
     {
         $attributes = $request->validate([
-            'title' => ['required'],
-            'body' => ['required'],
+            'title' => ['required', new SpamFreeRule],
+            'body' => ['required', new SpamFreeRule],
             'channel_id' => ['required', 'exists:channels,id'],
         ]);
-
-        try {
-            $spam->detect($attributes['title']);
-            $spam->detect($attributes['body']);
-        } catch (\Exception $exception) {
-            session()->flash('alert', [
-                'message' => $exception->getMessage(),
-                'level' => 'danger'
-            ]);
-
-            return redirect()->back();
-        }
 
         $thread = Thread::create(array_merge($attributes, [
             'user_id' => auth()->id(),

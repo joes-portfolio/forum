@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ReplyResource;
 use App\Models\Reply;
 use App\Models\Thread;
-use App\Services\Spam\Spam;
+use App\Rules\SpamFreeRule;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class RepliesController extends Controller
 {
@@ -23,20 +22,11 @@ class RepliesController extends Controller
         return ReplyResource::collection($replies);
     }
 
-    public function store(Request $request, $channelId, Thread $thread, Spam $spam): JsonResponse|RedirectResponse
+    public function store(Request $request, $channelId, Thread $thread): JsonResponse|RedirectResponse
     {
         $attributes = $request->validate([
-            'body' => ['required']
+            'body' => ['required', new SpamFreeRule]
         ]);
-
-        try {
-            $spam->detect($attributes['body']);
-        } catch (\Exception $exception) {
-            return response()->json(
-                $exception->getMessage(),
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
-        }
 
         $reply = $thread->addReply(array_merge($attributes, [
             'user_id' => auth()->id()
@@ -52,22 +42,13 @@ class RepliesController extends Controller
         return redirect()->to($thread->path());
     }
 
-    public function update(Request $request, Reply $reply, Spam $spam)
+    public function update(Request $request, Reply $reply)
     {
         $this->authorize('update', $reply);
 
         $attributes = $request->validate([
-            'body' => ['required']
+            'body' => ['required', new SpamFreeRule]
         ]);
-
-        try {
-            $spam->detect($attributes['body']);
-        } catch (\Exception $exception) {
-            return response()->json(
-                $exception->getMessage(),
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
-        }
 
         $reply->update($attributes);
     }
