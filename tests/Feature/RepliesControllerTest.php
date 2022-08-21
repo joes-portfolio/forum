@@ -12,6 +12,7 @@ use function Pest\Laravel\delete;
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\patch;
 use function Pest\Laravel\post;
+use function Pest\Laravel\withoutExceptionHandling;
 
 test('unauthenticated users cannot participate in threads', function () {
     $thread = ThreadFactory::new()->create();
@@ -115,4 +116,17 @@ test('users can request replies for a thread', function () {
         ->toHaveCount(2)
         ->and($response->json('meta'))
         ->toHaveKey('total', 2);
+});
+
+test('replies that appear to contain spam will be rejected', function () {
+    withoutExceptionHandling();
+
+    signIn();
+
+    $thread = create(ThreadFactory::new());
+    $reply = raw(ReplyFactory::new(['body' => 'Earn extra cash']));
+
+    $this->expectException(Exception::class);
+
+    post($thread->path() . '/replies', $reply);
 });

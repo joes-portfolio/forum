@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Filters\ThreadFilters;
-use App\Http\Resources\ReplyResource;
 use App\Http\Resources\ThreadResource;
 use App\Models\Channel;
 use App\Models\Thread;
+use App\Services\Spam\Spam;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
@@ -37,20 +37,19 @@ class ThreadsController
         return view('threads.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Spam $spam)
     {
-        $request->validate([
+        $attributes = $request->validate([
             'title' => ['required'],
             'body' => ['required'],
             'channel_id' => ['required', 'exists:channels,id'],
         ]);
 
-        $thread = Thread::create([
+        $spam->detect($attributes['body']);
+
+        $thread = Thread::create(array_merge($attributes, [
             'user_id' => auth()->id(),
-            'channel_id' => $request->get('channel_id'),
-            'title' => $request->get('title'),
-            'body' => $request->get('body'),
-        ]);
+        ]));
 
         session()->flash('alert', 'Thread published successfully!');
 
