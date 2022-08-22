@@ -1,8 +1,10 @@
 <script setup>
-import { computed, onMounted, reactive, ref } from 'vue';
+import { inject, onMounted, reactive, ref } from 'vue';
 import axios from 'axios';
 
 const emit = defineEmits(['added', 'removed']);
+const auth = inject('auth');
+
 const items = ref([]);
 const pagination = reactive({
   links: {},
@@ -45,11 +47,22 @@ function remove(index) {
 </script>
 
 <template>
-  <slot
-    :items="items"
-    :pagination="pagination"
-    :add="add"
-    :remove="remove"
-    :fetch="fetch"
-  />
+  <v-reply
+    v-cloak
+    v-for="(reply, index) in items"
+    :key="reply.id"
+    :data="reply"
+    @deleted="remove(index)"
+  ></v-reply>
+
+  <v-paginator :data="pagination" @changed="fetch"></v-paginator>
+
+  <div v-if="auth.check" class="sm:rounded-lg">
+    <v-new-reply-form @added="add"></v-new-reply-form>
+  </div>
+  <div v-else class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+    <div class="p-6 bg-white border-b border-gray-200">
+      <p class="flex justify-center">Please&nbsp;<a href="/login">sign in</a>&nbsp;to participate.</p>
+    </div>
+  </div>
 </template>

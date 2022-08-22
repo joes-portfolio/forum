@@ -19,6 +19,7 @@ class ReplyResource extends JsonResource
             'body' => $this->body,
             'created_at' => $this->created_at->diffForHumans(),
             'favorites_count' => $this->favorites_count ?? 0,
+            'is_favorited' => $this->is_favorited,
 
             'owner' => UserResource::make($this->whenLoaded('owner')),
 
