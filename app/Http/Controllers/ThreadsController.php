@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Filters\ThreadFilters;
+use App\Http\Requests\StoreThreadRequest;
 use App\Http\Resources\ThreadResource;
 use App\Models\Channel;
 use App\Models\Thread;
-use App\Rules\SpamFreeRule;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
@@ -37,17 +37,9 @@ class ThreadsController
         return view('threads.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreThreadRequest $request)
     {
-        $attributes = $request->validate([
-            'title' => ['required', new SpamFreeRule],
-            'body' => ['required', new SpamFreeRule],
-            'channel_id' => ['required', 'exists:channels,id'],
-        ]);
-
-        $thread = Thread::create(array_merge($attributes, [
-            'user_id' => auth()->id(),
-        ]));
+        $thread = Thread::create($request->validated());
 
         session()->flash('alert', 'Thread published successfully!');
 
