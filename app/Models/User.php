@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -51,6 +52,11 @@ class User extends Authenticatable
     public function activity(): HasMany
     {
         return $this->hasMany(Activity::class, 'user_id');
+    }
+
+    public function lastReply(): HasOne
+    {
+        return $this->hasOne(Reply::class)->latestOfMany();
     }
 
     public function visitedThreadCacheKey(Thread $thread): string

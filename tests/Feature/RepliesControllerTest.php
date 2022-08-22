@@ -126,3 +126,16 @@ test('replies that appear to contain spam will be rejected', function () {
     post($thread->path() . '/replies', $reply)
         ->assertSessionHasErrors(['body']);
 });
+
+test('authenticated users can reply once per minute', function () {
+    signIn();
+
+    $thread = create(ThreadFactory::new());
+    $reply = raw(ReplyFactory::new());
+
+    post("{$thread->path()}/replies", $reply)
+        ->assertRedirect($thread->path());
+
+    post("{$thread->path()}/replies", $reply)
+        ->assertStatus(\Symfony\Component\HttpFoundation\Response::HTTP_TOO_MANY_REQUESTS);
+});

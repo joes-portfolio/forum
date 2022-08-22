@@ -6,6 +6,7 @@ use App\Models\Reply;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class ReplyPolicy
 {
@@ -13,16 +14,20 @@ class ReplyPolicy
 
     public const UPDATE = 'update';
 
-    public function viewAny(User $user): bool
+    public function create(User $user): Response
     {
-    }
+        $lastReply = $user->fresh()->lastReply;
 
-    public function view(User $user, Reply $reply): bool
-    {
-    }
+        if (! $lastReply) {
+            return Response::allow();
+        }
 
-    public function create(User $user): bool
-    {
+        return $lastReply->wasJustPublished()
+            ? Response::denyWithStatus(
+                SymfonyResponse::HTTP_TOO_MANY_REQUESTS,
+                "You're posting too frequently. Relax."
+            )
+            : Response::allow();
     }
 
     public function update(User $user, Reply $reply): Response
@@ -30,17 +35,5 @@ class ReplyPolicy
         return ($reply->user_id === $user->id)
             ? Response::allow()
             : Response::deny('Stop. You know better.');
-    }
-
-    public function delete(User $user, Reply $reply): bool
-    {
-    }
-
-    public function restore(User $user, Reply $reply): bool
-    {
-    }
-
-    public function forceDelete(User $user, Reply $reply): bool
-    {
     }
 }

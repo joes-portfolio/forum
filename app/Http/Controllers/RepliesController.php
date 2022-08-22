@@ -24,6 +24,8 @@ class RepliesController extends Controller
 
     public function store(Request $request, $channelId, Thread $thread): JsonResponse|RedirectResponse
     {
+        $this->authorize('create', Reply::class);
+
         $attributes = $request->validate([
             'body' => ['required', new SpamFreeRule]
         ]);
