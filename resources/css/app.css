@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+    .highlight {
+        @apply bg-indigo-500 text-white
+    }
+}
+
 [x-cloak] { display: none !important; }
 
 [v-cloak] { display: none !important; }

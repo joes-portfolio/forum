@@ -95,7 +95,7 @@ async function destroy() {
       </div>
 
       <div v-else>
-        <article v-text="form.body"></article>
+        <article v-html="form.body"></article>
       </div>
     </div>
 

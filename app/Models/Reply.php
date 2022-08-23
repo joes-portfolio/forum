@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -45,6 +46,13 @@ class Reply extends Model
         return $this->belongsTo(Thread::class);
     }
 
+    public function body(): Attribute
+    {
+        return Attribute::set(function ($value) {
+            return preg_replace('/@([\w\-_]+)/', '<a href="/profiles/$1">$0</a>', $value);
+        });
+    }
+
     public function path(): string
     {
         return "{$this->thread->path()}#reply-{$this->id}";
@@ -53,5 +61,11 @@ class Reply extends Model
     public function wasJustPublished(): bool
     {
         return $this->created_at->gt(now()->subMinute());
+    }
+
+    public function mentionedUsers(): array
+    {
+        preg_match_all('/@([\w\-_]+)/', $this->body, $matches);
+        return $matches[1];
     }
 }

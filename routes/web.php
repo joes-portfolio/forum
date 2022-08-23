@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\UserMentionsController;
 use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\ProfilesController;
 use App\Http\Controllers\RepliesController;
@@ -50,5 +51,7 @@ Route::get('/profiles/{profileUser:name}/notifications', [UserNotificationsContr
     ->middleware('auth');
 Route::patch('/profiles/{profileUser:name}/notifications/{notification}', [UserNotificationsController::class, 'update'])
     ->middleware('auth');
+
+Route::get('/api/users', [UserMentionsController::class, '__invoke'])->middleware('auth');
 
 require __DIR__.'/auth.php';

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\ThreadReceivedNewReply;
 use App\Filters\ThreadFilters;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -77,7 +78,7 @@ class Thread extends Model
     {
         $reply = $this->replies()->create($attributes);
 
-        $this->notifySubscribers($reply);
+        event(new ThreadReceivedNewReply($reply));
 
         return $reply;
     }
@@ -94,13 +95,6 @@ class Thread extends Model
         $this->subscriptions()
             ->where('user_id', $userId ?: auth()->id())
             ->delete();
-    }
-
-    public function notifySubscribers($reply): void
-    {
-        $this->subscriptions
-            ->where('user_id', '!=', $reply->user_id)
-            ->each(fn ($subscription) => $subscription->notify($reply));
     }
 
     public function hasUpdatesFor(User $user): bool
