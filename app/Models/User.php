@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -23,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar_path'
     ];
 
     /**
@@ -57,6 +59,13 @@ class User extends Authenticatable
     public function lastReply(): HasOne
     {
         return $this->hasOne(Reply::class)->latestOfMany();
+    }
+
+    public function avatarPath(): Attribute
+    {
+        return Attribute::get(function ($value) {
+            return $value ? "/storage/$value" : "/storage/avatars/default.png";
+        });
     }
 
     public function visitedThreadCacheKey(Thread $thread): string

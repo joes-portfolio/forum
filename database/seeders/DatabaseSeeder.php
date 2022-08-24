@@ -5,7 +5,6 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Reply;
 use App\Models\Thread;
-use Carbon\CarbonInterval;
 use Database\Factories\ActivityFactory;
 use Database\Factories\ChannelFactory;
 use Database\Factories\ReplyFactory;
@@ -30,6 +29,9 @@ class DatabaseSeeder extends Seeder
                 ];
             })
             ->create();
+
+        $users[1]->update(['email' => 'john@mail.com']);
+        $users[2]->update(['email' => 'jane@mail.com']);
 
         $channels =  ChannelFactory::new()
             ->count(5)

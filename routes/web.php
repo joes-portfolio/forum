@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfilesController;
 use App\Http\Controllers\RepliesController;
 use App\Http\Controllers\ThreadsController;
 use App\Http\Controllers\ThreadSubscriptionsController;
+use App\Http\Controllers\UserAvatarController;
 use App\Http\Controllers\UserNotificationsController;
 use Illuminate\Support\Facades\Route;
 
@@ -53,5 +54,6 @@ Route::patch('/profiles/{profileUser:name}/notifications/{notification}', [UserN
     ->middleware('auth');
 
 Route::get('/api/users', [UserMentionsController::class, '__invoke'])->middleware('auth');
+Route::post('/api/users/{user}/avatar', [UserAvatarController::class, '__invoke'])->middleware('auth')->name('api.users.avatar');
 
 require __DIR__.'/auth.php';

@@ -22,10 +22,18 @@ function decrement() {
     <div class="w-2/3 space-y-6">
       <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
         <div class="px-4 py-5 sm:px-6">
-          <div class="flex justify-between items-end">
-            <p>
-              <a :href="`/profiles/${data.creator.name}`">{{ data.creator.name }}</a> posted:
-            </p>
+          <div class="flex justify-between">
+            <div class="flex items-center space-x-1">
+              <img v-if="data.creator.avatar"
+                   :src="data.creator.avatar"
+                   :alt="data.creator.name"
+                   class="inline-block h-6 w-6 rounded-sm"
+              />
+
+              <p>
+                <a :href="`/profiles/${data.creator.name}`">{{ data.creator.name }}</a> posted:
+              </p>
+            </div>
 
             <form v-if="can('update', data)" :action="data.path" method="post">
               <button
