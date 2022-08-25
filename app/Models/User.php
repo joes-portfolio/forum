@@ -68,6 +68,13 @@ class User extends Authenticatable
         });
     }
 
+    public function createdAtFormatted(): Attribute
+    {
+        return Attribute::get(function () {
+            return $this->created_at->diffForHumans();
+        });
+    }
+
     public function visitedThreadCacheKey(Thread $thread): string
     {
         return sprintf('users.%s.visits.%s', $this->id, $thread->id);

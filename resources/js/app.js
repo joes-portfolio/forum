@@ -11,6 +11,8 @@ import NewReplyForm from './components/NewReplyForm.vue';
 import Paginator from './components/Paginator.vue';
 import SubscribeButton from './components/SubscribeButton.vue';
 import UserNotifications from './components/UserNotifications.vue';
+import ProfileHeader from './components/ProfileHeader.vue';
+import AvatarForm from './components/AvatarForm.vue';
 import { auth, can } from './utils';
 
 Alpine.data('alert', alert);
@@ -22,6 +24,14 @@ if (document.getElementById('notifications')) {
     app.provide('auth', auth);
     app.component('v-user-notifications', UserNotifications);
     app.mount('#notifications');
+}
+
+if (document.getElementById('profile-header')) {
+    const app = createApp({});
+    app.provide('can', can);
+    app.component('v-profile-header', ProfileHeader);
+    app.component('v-avatar-form', AvatarForm);
+    app.mount('#profile-header');
 }
 
 if (document.getElementById('thread-view')) {

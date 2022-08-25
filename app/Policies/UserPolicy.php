@@ -9,6 +9,8 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
+    public const UPDATE = 'update';
+
     public function update(User $user, User $model): bool
     {
         return $user->is($model);

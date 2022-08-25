@@ -1,27 +1,8 @@
 <x-app-layout>
   <x-slot name="header">
-    <div class="flex items-center space-x-3">
-      <img class="inline-block h-10 w-10 rounded-full" src="{{ $profileUser->avatar_path }}" alt="">
-
-      <div>
-        <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:tracking-tight sm:truncate">
-          {{ $profileUser->name }}
-        </h2>
-
-        <p class="mb-0 text-sm font-medium text-gray-500 hover:text-gray-700">
-          member since {{ $profileUser->created_at->diffForHumans() }}
-        </p>
-      </div>
+    <div id="profile-header">
+      <v-profile-header :data="@js($profileUser)"></v-profile-header>
     </div>
-
-    @can('update', $profileUser)
-      <form action="{{ route('api.users.avatar', $profileUser) }}" method="post" enctype="multipart/form-data">
-        @csrf
-        <input type="file" name="avatar" accept="image/*">
-        <br>
-        <button type="submit">save</button>
-      </form>
-    @endcan
   </x-slot>
 
   <div class="py-12">

@@ -25,12 +25,12 @@ test('authenticated user can add an avatar to their profile', function () {
 
     signIn();
 
-    post('/api/users/' . auth()->id() . '/avatar', [
+    post('/api/users/' . auth()->user()->name . '/avatar', [
         'avatar' => $file = UploadedFile::fake()->image('avatar.png'),
     ]);
 
     expect(auth()->user()->avatar_path)
         ->toEqual('/storage/avatars/' . $file->hashName());
 
-    Storage::assertExists('public/avatars/' . $file->hashName());
+    Storage::disk('public')->assertExists('avatars/' . $file->hashName());
 });
