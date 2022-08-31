@@ -10,6 +10,8 @@ use Database\Factories\UserFactory;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Notification;
 
+use function Pest\Laravel\get;
+
 beforeEach(function () {
     $this->thread = ThreadFactory::new()->create();
 });
@@ -45,7 +47,7 @@ it('can add a reply', function () {
         ->toHaveCount(1);
 });
 
-it("'notifies it's subscribers when a new reply is added'", function () {
+it("notifies it's subscribers when a new reply is added", function () {
     Notification::fake();
 
     signIn();
@@ -93,7 +95,7 @@ it('knows if the authenticated user is subscribed', function () {
     expect($thread->is_subscribed_to)->toBeTrue();
 });
 
-it("can check if authenticated users have viewed it's latest updates", function () {
+it("can check if authenticated users have viewed its latest updates", function () {
     signIn();
 
     $user = auth()->user();
@@ -103,4 +105,14 @@ it("can check if authenticated users have viewed it's latest updates", function 
     $user->read($this->thread);
 
     expect($this->thread->hasUpdatesFor($user))->toBeFalse();
+});
+
+it('increments its visits count when viewed', function () {
+    $thread = create(ThreadFactory::new());
+
+    expect($thread->visits_count)->toEqual(0);
+
+    get($thread->path());
+
+    expect($thread->fresh()->visits_count)->toEqual(1);
 });

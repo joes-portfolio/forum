@@ -11,9 +11,12 @@
             </h4>
             <p>posted by <a href="/profiles/{{ $thread->creator->name }}">{{ $thread->creator->name }}</a></p>
           </div>
-          <a href="{{ $thread->path() }}">
-            {{ $thread->replies_count }} {{ str('reply')->plural($thread->replies_count) }}
-          </a>
+          <div>
+            <a href="{{ $thread->path() }}">
+              {{ $thread->replies_count }} {{ str('reply')->plural($thread->replies_count) }}
+            </a>
+            <span class="block">{{ $thread->visits_count }} views</span>
+          </div>
         </div>
         <div class="py-2">{{ $thread->body }}</div>
       </article>

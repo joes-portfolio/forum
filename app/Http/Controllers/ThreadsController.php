@@ -26,9 +26,15 @@ class ThreadsController
         }
 
         $threads = $threads->paginate();
+        $trending = Thread::query()
+            ->limit(5)
+            ->where('visits_count', '>', 0)
+            ->orderBy('visits_count')
+            ->get();
 
         return view('threads.index', [
             'threads' => $threads,
+            'trending' => $trending,
         ]);
     }
 
@@ -53,6 +59,8 @@ class ThreadsController
         if (auth()->check()) {
             auth()->user()->read($thread);
         }
+
+        $thread->increment('visits_count');
 
         return view('threads.show', [
             'thread' => ThreadResource::make($thread),
