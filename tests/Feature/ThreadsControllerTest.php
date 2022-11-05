@@ -7,14 +7,12 @@ use Database\Factories\ChannelFactory;
 use Database\Factories\ReplyFactory;
 use Database\Factories\ThreadFactory;
 use Database\Factories\UserFactory;
-use Illuminate\Auth\AuthenticationException;
 
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\delete;
 use function Pest\Laravel\get;
 use function Pest\Laravel\post;
-use function Pest\Laravel\withoutExceptionHandling;
 
 beforeEach(function () {
     $this->thread = create(ThreadFactory::new());
@@ -186,4 +184,17 @@ test('authorized users can delete threads', function () {
         'subject_id' => $reply->id,
         'subject_type' => $reply::class,
     ]);
+});
+
+test('new users must confirm email before creating threads', function () {
+    signIn(create(UserFactory::new(['email_verified_at' => null])));
+
+    get('/threads/create')
+        ->assertRedirect('/threads')
+        ->assertSessionHas('alert');
+
+    $thread = raw(ThreadFactory::new());
+
+    post('/threads', $thread)
+        ->assertUnauthorized();
 });

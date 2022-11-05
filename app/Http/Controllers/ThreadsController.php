@@ -38,8 +38,13 @@ class ThreadsController
         ]);
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        if (! $request->user()->hasVerifiedEmail()) {
+            session()->flash('alert', ['message' => 'Please, verify your email.', 'level' => 'info']);
+            return redirect('/threads');
+        }
+
         return view('threads.create');
     }
 

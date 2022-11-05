@@ -3,14 +3,17 @@
 namespace App\Http\Requests;
 
 use App\Rules\SpamFreeRule;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreThreadRequest extends FormRequest
 {
 
-    public function authorize(): bool
+    public function authorize(): Response
     {
-        return true;
+        return auth()->user()->hasVerifiedEmail()
+            ? Response::allow()
+            : Response::denyWithStatus(401, 'Please, verify your email.');
     }
 
     public function rules(): array
